@@ -92,6 +92,71 @@ The dashboard displays:
 - Logout functionality
 - Fully responsive design for all devices
 
+### Transaction Management
+![Transaction Management](docs/images/transaction-management.PNG)
+
+The transaction management page features:
+- Full CRUD operations for transactions
+- List view with all transaction details
+- Color-coded rows based on transaction status and type:
+  - Green background for completed transactions
+  - Yellow background for pending transactions
+  - Red background for failed transactions
+- Action buttons for each transaction (Edit, Delete)
+- Add new transaction button
+- Real-time data loading from API
+
+#### Add/Edit Transaction Modal
+![Add Transaction](docs/images/transaction-add.PNG)
+![Edit Transaction](docs/images/transaction-edit.PNG)
+
+The transaction modal provides:
+- Form to add new transactions or edit existing ones
+- Fields for:
+  - Description
+  - Amount
+  - Type (Credit/Debit)
+  - Category
+  - Status (Pending/Completed/Failed)
+  - Reference number
+- Form validation
+- Save and Cancel actions
+
+### User Management (Admin Only)
+![User Management](docs/images/user-management.PNG)
+
+The user management page includes:
+- Full CRUD operations for users
+- List view with user details:
+  - User ID
+  - Username
+  - Full Name
+  - Email
+  - Role (Admin/User)
+  - Account status (Active/Inactive)
+- Color-coded rows based on user status:
+  - Green background for active users
+  - Red background for inactive users
+- Action buttons for each user (Edit, Toggle Status, Delete)
+- Add new user button
+- Role-based badges
+
+#### Add/Edit User Modal
+![Add User](docs/images/user-management-add.PNG)
+![Edit User](docs/images/user-management-edit.PNG)
+
+The user modal provides:
+- Form to add new users or edit existing ones
+- Fields for:
+  - Username
+  - Password (optional when editing)
+  - Full Name
+  - Email
+  - Role (User/Admin)
+  - Account enabled checkbox
+- Form validation
+- Save and Cancel actions
+
 ## 👤 Demo Credentials
 
 ### Admin User
