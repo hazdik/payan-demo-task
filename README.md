@@ -63,6 +63,35 @@ java -jar target/payan-demo-task-1.0.0.jar
 - **Dashboard**: http://localhost:8080/dashboard (after login)
 - **H2 Console**: http://localhost:8080/h2-console (for database debugging)
 
+## 📸 Screenshots
+
+### Login Screen
+![Login Screen](docs/images/login-screen.png)
+
+The login page features:
+- Clean, modern design with gradient background
+- Form fields for username and password
+- Demo credentials displayed for easy testing
+- Error and success message support
+- Responsive layout
+
+### Dashboard Screen
+![Dashboard Screen](docs/images/dashboard-screen.png)
+
+The dashboard displays:
+- Professional navigation bar with user information
+- Transaction counter badge showing total transactions
+- Comprehensive transaction table with:
+  - Transaction ID and Description
+  - Amount (color-coded: green for credit, red for debit)
+  - Transaction Type (CREDIT/DEBIT)
+  - Category
+  - Status badges (color-coded: completed, pending, failed)
+  - Date & Time
+  - Reference number
+- Logout functionality
+- Fully responsive design for all devices
+
 ## 👤 Demo Credentials
 
 ### Admin User
