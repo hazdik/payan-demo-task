@@ -32,7 +32,8 @@
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            align-items: center;
         }
 
         .nav-links a {
@@ -41,10 +42,17 @@
             padding: 8px 15px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .nav-links a:hover, .nav-links a.active {
             background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-icon {
+            font-size: 18px;
         }
 
         .navbar-right {
@@ -130,6 +138,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            border: 1px solid #000;
         }
 
         thead {
@@ -141,17 +150,26 @@
             text-align: left;
             font-weight: 600;
             color: #333;
-            border-bottom: 2px solid #e0e0e0;
+            border: 1px solid #000;
         }
 
         td {
             padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
+            border: 1px solid #000;
             color: #555;
         }
 
         tbody tr:hover {
-            background-color: #f8f9fa;
+            opacity: 0.8;
+        }
+
+        /* Row colors based on user status */
+        tbody tr.row-active {
+            background-color: #d4edda;
+        }
+
+        tbody tr.row-inactive {
+            background-color: #f8d7da;
         }
 
         .status-badge {
@@ -187,36 +205,35 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .btn-edit, .btn-delete, .btn-toggle {
-            padding: 6px 12px;
+        .btn-icon {
+            background: none;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: opacity 0.2s;
+            font-size: 18px;
+            padding: 5px;
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.2);
         }
 
         .btn-edit {
-            background-color: #17a2b8;
-            color: white;
+            color: #17a2b8;
         }
 
         .btn-delete {
-            background-color: #dc3545;
-            color: white;
+            color: #dc3545;
         }
 
         .btn-toggle {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-        .btn-edit:hover, .btn-delete:hover, .btn-toggle:hover {
-            opacity: 0.8;
+            color: #ffc107;
         }
 
         /* Modal Styles */
@@ -350,9 +367,18 @@
     <nav class="navbar">
         <h1>Banyan Dashboard</h1>
         <div class="nav-links">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/transactions">Transactions</a>
-            <a href="/users" class="active">Users</a>
+            <a href="/dashboard">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/transactions">
+                <span class="nav-icon">💳</span>
+                <span>Transaction Management</span>
+            </a>
+            <a href="/users" class="active">
+                <span class="nav-icon">👥</span>
+                <span>User Management</span>
+            </a>
         </div>
         <div class="navbar-right">
             <div class="user-info">
@@ -481,6 +507,10 @@
 
             users.forEach(user => {
                 const row = document.createElement('tr');
+                
+                // Add row color class based on status
+                row.className = user.enabled ? 'row-active' : 'row-inactive';
+                
                 row.innerHTML = `
                     <td>${user.id}</td>
                     <td>${user.username}</td>
@@ -490,9 +520,9 @@
                     <td><span class="status-badge ${user.enabled ? 'status-active' : 'status-inactive'}">${user.enabled ? 'Active' : 'Inactive'}</span></td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-edit" onclick="editUser(${user.id})">Edit</button>
-                            <button class="btn-toggle" onclick="toggleUserStatus(${user.id})">${user.enabled ? 'Disable' : 'Enable'}</button>
-                            <button class="btn-delete" onclick="deleteUser(${user.id})">Delete</button>
+                            <button class="btn-icon btn-edit" onclick="editUser(${user.id})" title="Edit">✏️</button>
+                            <button class="btn-icon btn-toggle" onclick="toggleUserStatus(${user.id})" title="${user.enabled ? 'Disable' : 'Enable'}">${user.enabled ? '🔒' : '🔓'}</button>
+                            <button class="btn-icon btn-delete" onclick="deleteUser(${user.id})" title="Delete">🗑️</button>
                         </div>
                     </td>
                 `;

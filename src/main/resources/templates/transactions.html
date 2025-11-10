@@ -32,7 +32,8 @@
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            align-items: center;
         }
 
         .nav-links a {
@@ -41,10 +42,17 @@
             padding: 8px 15px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .nav-links a:hover, .nav-links a.active {
             background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-icon {
+            font-size: 18px;
         }
 
         .navbar-right {
@@ -130,6 +138,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            border: 1px solid #000;
         }
 
         thead {
@@ -141,17 +150,38 @@
             text-align: left;
             font-weight: 600;
             color: #333;
-            border-bottom: 2px solid #e0e0e0;
+            border: 1px solid #000;
         }
 
         td {
             padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
+            border: 1px solid #000;
             color: #555;
         }
 
         tbody tr:hover {
-            background-color: #f8f9fa;
+            opacity: 0.8;
+        }
+
+        /* Row colors based on status and type */
+        tbody tr.row-completed {
+            background-color: #d4edda;
+        }
+
+        tbody tr.row-pending {
+            background-color: #fff3cd;
+        }
+
+        tbody tr.row-failed {
+            background-color: #f8d7da;
+        }
+
+        tbody tr.row-credit {
+            background-color: #e7f5e9;
+        }
+
+        tbody tr.row-debit {
+            background-color: #ffe6e6;
         }
 
         .status-badge {
@@ -170,31 +200,31 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .btn-edit, .btn-delete {
-            padding: 6px 12px;
+        .btn-icon {
+            background: none;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: opacity 0.2s;
+            font-size: 18px;
+            padding: 5px;
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.2);
         }
 
         .btn-edit {
-            background-color: #17a2b8;
-            color: white;
+            color: #17a2b8;
         }
 
         .btn-delete {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-edit:hover, .btn-delete:hover {
-            opacity: 0.8;
+            color: #dc3545;
         }
 
         /* Modal Styles */
@@ -318,9 +348,18 @@
     <nav class="navbar">
         <h1>Banyan Dashboard</h1>
         <div class="nav-links">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/transactions" class="active">Transactions</a>
-            <a href="/users" th:if="${isAdmin}">Users</a>
+            <a href="/dashboard">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/transactions" class="active">
+                <span class="nav-icon">💳</span>
+                <span>Transaction Management</span>
+            </a>
+            <a href="/users" th:if="${isAdmin}">
+                <span class="nav-icon">👥</span>
+                <span>User Management</span>
+            </a>
         </div>
         <div class="navbar-right">
             <div class="user-info">
@@ -455,6 +494,19 @@
                 const date = new Date(transaction.transactionDate);
                 const formattedDate = date.toLocaleString();
                 
+                // Add row color class based on status or type
+                if (transaction.status === 'COMPLETED') {
+                    row.className = 'row-completed';
+                } else if (transaction.status === 'PENDING') {
+                    row.className = 'row-pending';
+                } else if (transaction.status === 'FAILED') {
+                    row.className = 'row-failed';
+                } else if (transaction.type === 'CREDIT') {
+                    row.className = 'row-credit';
+                } else if (transaction.type === 'DEBIT') {
+                    row.className = 'row-debit';
+                }
+                
                 row.innerHTML = `
                     <td>${transaction.transactionId}</td>
                     <td>${transaction.description}</td>
@@ -465,8 +517,8 @@
                     <td>${formattedDate}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-edit" onclick="editTransaction(${transaction.id})">Edit</button>
-                            <button class="btn-delete" onclick="deleteTransaction(${transaction.id})">Delete</button>
+                            <button class="btn-icon btn-edit" onclick="editTransaction(${transaction.id})" title="Edit">✏️</button>
+                            <button class="btn-icon btn-delete" onclick="deleteTransaction(${transaction.id})" title="Delete">🗑️</button>
                         </div>
                     </td>
                 `;
