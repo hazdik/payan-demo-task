@@ -66,7 +66,7 @@ java -jar target/payan-demo-task-1.0.0.jar
 ## 📸 Screenshots
 
 ### Login Screen
-![Login Screen](docs/images/login-screen.png)
+![Login Screen](docs/images/login-screen.PNG)
 
 The login page features:
 - Clean, modern design with gradient background
@@ -76,7 +76,7 @@ The login page features:
 - Responsive layout
 
 ### Dashboard Screen
-![Dashboard Screen](docs/images/dashboard-screen.png)
+![Dashboard Screen](docs/images/dashboard-screen.PNG)
 
 The dashboard displays:
 - Professional navigation bar with user information
