@@ -239,6 +239,10 @@
         <div class="dashboard-header">
             <h2>Welcome to Your Dashboard</h2>
             <p>View and manage all your transactions in one place</p>
+            <div style="margin-top: 20px; display: flex; gap: 15px;">
+                <a href="/transactions" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 600;">Manage Transactions</a>
+                <a href="/users" th:if="${isAdmin}" style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 600;">Manage Users (Admin)</a>
+            </div>
         </div>
 
         <div class="table-container">

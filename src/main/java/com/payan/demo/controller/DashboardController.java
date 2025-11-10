@@ -21,10 +21,13 @@ public class DashboardController {
     public String dashboard(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
         
         List<Transaction> transactions = transactionService.getAllTransactions();
         
         model.addAttribute("username", username);
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("transactions", transactions);
         
         return "dashboard";
@@ -33,5 +36,28 @@ public class DashboardController {
     @GetMapping("/logout")
     public String logout() {
         return "redirect:/login?logout";
+    }
+
+    @GetMapping("/transactions")
+    public String transactions(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+        
+        model.addAttribute("username", username);
+        model.addAttribute("isAdmin", isAdmin);
+        
+        return "transactions";
+    }
+
+    @GetMapping("/users")
+    public String users(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        
+        model.addAttribute("username", username);
+        
+        return "users";
     }
 }
