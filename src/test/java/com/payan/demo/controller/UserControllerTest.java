@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -51,12 +53,14 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testCreateUser_Success() throws Exception {
         // Arrange
         when(userService.createUser(any(User.class))).thenReturn(testUser);
 
         // Act & Assert
         mockMvc.perform(post("/api/users")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isCreated())
@@ -66,6 +70,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testGetAllUsers_Success() throws Exception {
         // Arrange
         User user2 = new User();
@@ -87,6 +92,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testGetAllUsers_NoContent() throws Exception {
         // Arrange
         when(userService.getAllUsers()).thenReturn(Arrays.asList());
@@ -98,6 +104,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testGetUserById_Found() throws Exception {
         // Arrange
         when(userService.getUserById(1L)).thenReturn(Optional.of(testUser));
@@ -111,6 +118,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testGetUserById_NotFound() throws Exception {
         // Arrange
         when(userService.getUserById(anyLong())).thenReturn(Optional.empty());
@@ -122,6 +130,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testGetUserByUsername_Found() throws Exception {
         // Arrange
         when(userService.getUserByUsername("testuser")).thenReturn(Optional.of(testUser));
@@ -134,6 +143,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testGetUserByUsername_NotFound() throws Exception {
         // Arrange
         when(userService.getUserByUsername(anyString())).thenReturn(Optional.empty());
@@ -145,6 +155,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testUpdateUser_Success() throws Exception {
         // Arrange
         User updatedUser = new User();
@@ -158,6 +169,7 @@ public class UserControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/users/1")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedUser)))
                 .andExpect(status().isOk())
@@ -166,6 +178,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testUpdateUser_NotFound() throws Exception {
         // Arrange
         when(userService.updateUser(anyLong(), any(User.class)))
@@ -173,34 +186,40 @@ public class UserControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/users/999")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUser)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testDeleteUser_Success() throws Exception {
         // Arrange
         doNothing().when(userService).deleteUser(1L);
 
         // Act & Assert
         mockMvc.perform(delete("/api/users/1")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testDeleteUser_NotFound() throws Exception {
         // Arrange
         doThrow(new RuntimeException("User not found")).when(userService).deleteUser(anyLong());
 
         // Act & Assert
         mockMvc.perform(delete("/api/users/999")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testToggleUserStatus_Success() throws Exception {
         // Arrange
         testUser.setEnabled(false);
@@ -208,12 +227,14 @@ public class UserControllerTest {
 
         // Act & Assert
         mockMvc.perform(patch("/api/users/1/toggle-status")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.enabled", is(false)));
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testToggleUserStatus_NotFound() throws Exception {
         // Arrange
         when(userService.toggleUserStatus(anyLong()))
@@ -221,11 +242,13 @@ public class UserControllerTest {
 
         // Act & Assert
         mockMvc.perform(patch("/api/users/999/toggle-status")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testCheckUsernameExists_True() throws Exception {
         // Arrange
         when(userService.existsByUsername("testuser")).thenReturn(true);
@@ -238,6 +261,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void testCheckUsernameExists_False() throws Exception {
         // Arrange
         when(userService.existsByUsername("nonexistent")).thenReturn(false);

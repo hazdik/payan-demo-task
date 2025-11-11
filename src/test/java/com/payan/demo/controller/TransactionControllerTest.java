@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -23,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -55,12 +58,14 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testCreateTransaction_Success() throws Exception {
         // Arrange
         when(transactionService.createTransaction(any(Transaction.class))).thenReturn(testTransaction);
 
         // Act & Assert
         mockMvc.perform(post("/api/transactions")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testTransaction)))
                 .andExpect(status().isCreated())
@@ -71,6 +76,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetAllTransactions_Success() throws Exception {
         // Arrange
         Transaction transaction2 = new Transaction();
@@ -96,6 +102,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetAllTransactions_NoContent() throws Exception {
         // Arrange
         when(transactionService.getAllTransactions()).thenReturn(Arrays.asList());
@@ -107,6 +114,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionById_Found() throws Exception {
         // Arrange
         when(transactionService.getTransactionById(1L)).thenReturn(Optional.of(testTransaction));
@@ -120,6 +128,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionById_NotFound() throws Exception {
         // Arrange
         when(transactionService.getTransactionById(anyLong())).thenReturn(Optional.empty());
@@ -131,6 +140,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionsByStatus_Success() throws Exception {
         // Arrange
         List<Transaction> transactions = Arrays.asList(testTransaction);
@@ -145,6 +155,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionsByStatus_NoContent() throws Exception {
         // Arrange
         when(transactionService.getTransactionsByStatus(anyString())).thenReturn(Arrays.asList());
@@ -156,6 +167,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionsByType_Success() throws Exception {
         // Arrange
         List<Transaction> transactions = Arrays.asList(testTransaction);
@@ -170,6 +182,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionsByType_NoContent() throws Exception {
         // Arrange
         when(transactionService.getTransactionsByType(anyString())).thenReturn(Arrays.asList());
@@ -181,6 +194,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionsByCategory_Success() throws Exception {
         // Arrange
         List<Transaction> transactions = Arrays.asList(testTransaction);
@@ -195,6 +209,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testGetTransactionsByCategory_NoContent() throws Exception {
         // Arrange
         when(transactionService.getTransactionsByCategory(anyString())).thenReturn(Arrays.asList());
@@ -206,6 +221,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testUpdateTransaction_Success() throws Exception {
         // Arrange
         Transaction updatedTransaction = new Transaction();
@@ -221,6 +237,7 @@ public class TransactionControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/transactions/1")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedTransaction)))
                 .andExpect(status().isOk())
@@ -229,6 +246,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testUpdateTransaction_NotFound() throws Exception {
         // Arrange
         when(transactionService.updateTransaction(anyLong(), any(Transaction.class)))
@@ -236,12 +254,14 @@ public class TransactionControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/transactions/999")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testTransaction)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testUpdateTransactionStatus_Success() throws Exception {
         // Arrange
         testTransaction.setStatus("FAILED");
@@ -249,6 +269,7 @@ public class TransactionControllerTest {
 
         // Act & Assert
         mockMvc.perform(patch("/api/transactions/1/status")
+                .with(csrf())
                 .param("status", "FAILED")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -256,6 +277,7 @@ public class TransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testUpdateTransactionStatus_NotFound() throws Exception {
         // Arrange
         when(transactionService.updateTransactionStatus(anyLong(), anyString()))
@@ -263,23 +285,27 @@ public class TransactionControllerTest {
 
         // Act & Assert
         mockMvc.perform(patch("/api/transactions/999/status")
+                .with(csrf())
                 .param("status", "FAILED")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testDeleteTransaction_Success() throws Exception {
         // Arrange
         doNothing().when(transactionService).deleteTransaction(1L);
 
         // Act & Assert
         mockMvc.perform(delete("/api/transactions/1")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testDeleteTransaction_NotFound() throws Exception {
         // Arrange
         doThrow(new RuntimeException("Transaction not found"))
@@ -287,6 +313,7 @@ public class TransactionControllerTest {
 
         // Act & Assert
         mockMvc.perform(delete("/api/transactions/999")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
